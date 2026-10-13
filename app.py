@@ -5,6 +5,11 @@ from langchain_openai import ChatOpenAI
 from langchain_classic.agents import AgentExecutor, create_openai_tools_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from src.tools import search_technical_docs, lookup_price
+from src.llm_config import (
+    NOS_CHAT_MODEL,
+    NOS_GATEWAY_BASE_URL,
+    get_gateway_api_key,
+)
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -27,7 +32,12 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0)
+llm = ChatOpenAI(
+    model=NOS_CHAT_MODEL,
+    temperature=0,
+    api_key=get_gateway_api_key(),
+    base_url=NOS_GATEWAY_BASE_URL,
+)
 tools = [search_technical_docs, lookup_price]
 agent = create_openai_tools_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)

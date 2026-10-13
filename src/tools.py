@@ -4,12 +4,25 @@ import pandas as pd
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.tools import tool
+from src.llm_config import (
+    NOS_EMBEDDING_MODEL,
+    NOS_GATEWAY_BASE_URL,
+    get_gateway_api_key,
+)
 
 # 1. Ferramenta de Procura Técnica
 @tool
 def search_technical_docs(query: str) -> str:
     """Pesquisa especificações técnicas, portas, capacidade e compatibilidade de hardware DWDM nos manuais."""
-    vector_store = Chroma(persist_directory="data/vector_db", embedding_function=OpenAIEmbeddings())
+    embeddings = OpenAIEmbeddings(
+        model=NOS_EMBEDDING_MODEL,
+        api_key=get_gateway_api_key(),
+        base_url=NOS_GATEWAY_BASE_URL,
+    )
+    vector_store = Chroma(
+        persist_directory="data/vector_db",
+        embedding_function=embeddings,
+    )
     results = vector_store.similarity_search(query, k=4)
     return "\n\n".join([doc.page_content for doc in results])
 
