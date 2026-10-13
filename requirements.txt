@@ -5,3 +5,7 @@ langchain-openai
 python-dotenv
 pypdf
 chromadb
+pandas
+openpyxl
+langchain-classic
+streamlit
