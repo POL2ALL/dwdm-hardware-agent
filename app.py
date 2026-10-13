@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from src.tools import search_technical_docs, lookup_price
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 st.set_page_config(page_title="DWDM Hardware & Pricing Assistant", layout="wide")
 st.title("📡 DWDM Hardware & Pricing Assistant")
